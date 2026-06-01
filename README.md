@@ -121,7 +121,12 @@ Bağlantı bilgisi `HatchWatch.DAL/VeritabaniBaglanti.cs` dosyasındadır:
 Server=localhost;Port=3306;Database=hatchwatch_db;Uid=root;Pwd=MYSQL_SIFRESI;
 ```
 
-`MYSQL_SIFRESI` bölümünü kendi yerel MySQL şifrenizle değiştirmeniz gerekir.
+Yerel çalıştırmada şifreyi kod içine yazmadan ortam değişkeni ile verebilirsiniz:
+
+```powershell
+$env:HATCHWATCH_MYSQL_PASSWORD="MYSQL_SIFRENIZ"
+dotnet run --project HatchWatch.UI
+```
 
 ### 4. Projeyi Derleyin
 
