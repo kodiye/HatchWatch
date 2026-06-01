@@ -1,0 +1,138 @@
+@page
+@model IzlemeListesiModel
+
+@{
+    ViewData["Title"] = "İzleme Listem";
+}
+
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">İzleme Listem</span>
+        <h1>Takip edilen içerikler</h1>
+        <p>İzlenecekleri planla, izlediklerine puan ver ve güncelleme trigger'ını demo sırasında görünür hale getir.</p>
+    </div>
+    <div class="stat-card">
+        <span>İzlendi</span>
+        <strong>@(Model.IzlenenIcerikSayisi ?? 0)</strong>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.BasariliMesaj))
+{
+    <div class="app-alert app-alert-success">@Model.BasariliMesaj</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.HataMesaji))
+{
+    <div class="app-alert app-alert-danger">@Model.HataMesaji</div>
+}
+
+<section class="toolbar-panel">
+    <form method="get" class="inline-form">
+        <label>
+            Kullanıcı
+            <select asp-for="SecilenKullaniciId">
+                @foreach (var kullanici in Model.Kullanicilar)
+                {
+                    <option value="@kullanici.UserId">@kullanici.Username</option>
+                }
+            </select>
+        </label>
+        <button type="submit" class="btn btn-secondary-action">Göster</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Yeni Kayıt</span>
+            <h2>İzleme listesine ekle</h2>
+        </div>
+    </div>
+
+    <form method="post" asp-page-handler="Ekle" class="form-panel">
+        <input type="hidden" asp-for="SecilenKullaniciId" />
+        <div class="form-grid">
+            <label>
+                Kullanıcı
+                <select asp-for="YeniKayit.UserId" required>
+                    @foreach (var kullanici in Model.Kullanicilar)
+                    {
+                        <option value="@kullanici.UserId" selected="@(kullanici.UserId == Model.SecilenKullaniciId)">@kullanici.Username</option>
+                    }
+                </select>
+            </label>
+            <label>
+                İçerik
+                <select asp-for="YeniKayit.ContentId" required>
+                    @foreach (var icerik in Model.Icerikler)
+                    {
+                        <option value="@icerik.ContentId">@icerik.Title</option>
+                    }
+                </select>
+            </label>
+            <label>
+                İzleme Durumu
+                <select asp-for="YeniKayit.WatchStatus" required>
+                    <option value="İzlenecek">İzlenecek</option>
+                    <option value="İzleniyor">İzleniyor</option>
+                    <option value="İzlendi">İzlendi</option>
+                    <option value="Bırakıldı">Bırakıldı</option>
+                </select>
+            </label>
+            <label>
+                Kullanıcı Puanı
+                <input asp-for="YeniKayit.UserRating" type="number" min="1" max="10" />
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary-action">Listeye Ekle</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Kayıtlar</span>
+            <h2>İzleme listesi kayıtları</h2>
+        </div>
+        <span class="soft-badge">@Model.IzlemeListesi.Count kayıt</span>
+    </div>
+
+    <div class="watchlist-list">
+        @foreach (var kayit in Model.IzlemeListesi)
+        {
+            <div class="watchlist-row">
+                <div class="watchlist-title">
+                    <strong>@kayit.Title</strong>
+                    <span>@kayit.Username · Eklenme: @kayit.AddedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                    <span>Güncellenme: @(kayit.UpdatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</span>
+                </div>
+
+                <form method="post" asp-page-handler="Guncelle" class="watchlist-form">
+                    <input type="hidden" asp-for="SecilenKullaniciId" />
+                    <input type="hidden" name="GuncellenecekKayit.WatchlistId" value="@kayit.WatchlistId" />
+                    <label>
+                        Durum
+                        <select name="GuncellenecekKayit.WatchStatus" required>
+                            <option value="İzlenecek" selected="@(kayit.WatchStatus == "İzlenecek")">İzlenecek</option>
+                            <option value="İzleniyor" selected="@(kayit.WatchStatus == "İzleniyor")">İzleniyor</option>
+                            <option value="İzlendi" selected="@(kayit.WatchStatus == "İzlendi")">İzlendi</option>
+                            <option value="Bırakıldı" selected="@(kayit.WatchStatus == "Bırakıldı")">Bırakıldı</option>
+                        </select>
+                    </label>
+                    <label>
+                        Puan
+                        <input name="GuncellenecekKayit.UserRating" value="@kayit.UserRating" type="number" min="1" max="10" />
+                    </label>
+                    <button type="submit" class="btn btn-secondary-action">Güncelle</button>
+                </form>
+
+                <form method="post" asp-page-handler="Sil" class="delete-form">
+                    <input type="hidden" asp-for="SecilenKullaniciId" />
+                    <input type="hidden" name="SilinecekKayitId" value="@kayit.WatchlistId" />
+                    <button type="submit" class="btn btn-danger-action">Sil</button>
+                </form>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,59 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<section class="page-hero home-hero">
+    <div class="hero-copy">
+        <span class="eyebrow">BTS304 Final Projesi</span>
+        <h1>Film ve diziler için sade bir takip deneyimi</h1>
+        <p>HatchWatch, stored procedure, function, trigger ve N-katmanlı mimariyi net biçimde göstermek için hazırlanmış demo seviyesinde bir izleme sistemi.</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary-action" asp-page="/Icerikler">Keşfet</a>
+            <a class="btn btn-secondary-action" asp-page="/IzlemeListesi">İzleme Listem</a>
+        </div>
+    </div>
+
+    <div class="hero-preview">
+        <div class="preview-poster large">Film</div>
+        <div class="preview-stack">
+            <div class="preview-poster">Dizi</div>
+            <div class="mini-stat">
+                <span>Ortalama puan</span>
+                <strong>9.0</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="metric-grid">
+    <article class="metric-card">
+        <span>İçerik</span>
+        <strong>@Model.IcerikSayisi</strong>
+    </article>
+    <article class="metric-card">
+        <span>İzleme kaydı</span>
+        <strong>@Model.IzlemeKaydiSayisi</strong>
+    </article>
+    <article class="metric-card">
+        <span>İzlendi</span>
+        <strong>@Model.IzlenenSayisi</strong>
+    </article>
+</section>
+
+<section class="feature-band">
+    <article>
+        <h2>Keşfet</h2>
+        <p>İçerikler kart yapısıyla listelenir; ortalama puan function üzerinden hesaplanarak gösterilir.</p>
+    </article>
+    <article>
+        <h2>İzleme Listem</h2>
+        <p>Kullanıcı puanı ve izleme durumu güncellenir; trigger hatası kullanıcıya anlaşılır mesaj olarak döner.</p>
+    </article>
+    <article>
+        <h2>Yönetim Paneli</h2>
+        <p>İçerik, tür ve platform kayıtlarında ekleme, güncelleme ve silme işlemleri procedure çağrılarıyla yapılır.</p>
+    </article>
+</section>

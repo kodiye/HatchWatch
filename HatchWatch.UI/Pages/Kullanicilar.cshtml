@@ -1,0 +1,37 @@
+@page
+@model KullanicilarModel
+
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Yönetim Paneli</span>
+        <h1>Kullanıcılar</h1>
+        <p>Demo veri setindeki kullanıcı kayıtları bu ekranda listelenir.</p>
+    </div>
+    <span class="soft-badge">@Model.Kullanicilar.Count kayıt</span>
+</section>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kullanıcı Adı</th>
+            <th>E-posta</th>
+            <th>Kayıt Tarihi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kullanici in Model.Kullanicilar)
+        {
+            <tr>
+                <td>@kullanici.UserId</td>
+                <td>@kullanici.Username</td>
+                <td>@kullanici.Email</td>
+                <td>@kullanici.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,147 @@
+@page
+@model IceriklerModel
+
+@{
+    ViewData["Title"] = "Keşfet";
+}
+
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Keşfet</span>
+        <h1>Film ve dizileri tek yerde takip et</h1>
+        <p>HatchWatch içerikleri, kullanıcı puanlarını ve izleme durumlarını demo seviyesinde ama gerçek bir takip sitesi hissiyle gösterir.</p>
+    </div>
+    <a class="btn btn-primary-action" href="#icerik-yonetimi">İçerik Yönetimi</a>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.BasariliMesaj))
+{
+    <div class="app-alert app-alert-success">@Model.BasariliMesaj</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.HataMesaji))
+{
+    <div class="app-alert app-alert-danger">@Model.HataMesaji</div>
+}
+
+<section class="content-grid">
+    @foreach (var icerik in Model.Icerikler)
+    {
+        string? posterYolu = Model.PosterYolu(icerik);
+
+        <article class="content-card">
+            <div class="poster-tile @(posterYolu is null ? "" : "has-image")">
+                @if (posterYolu is not null)
+                {
+                    <img src="@posterYolu" alt="@icerik.Title posteri" />
+                    <span class="poster-label">@icerik.ContentType</span>
+                }
+                else
+                {
+                    <span>@icerik.ContentType</span>
+                }
+            </div>
+            <div class="content-card-body">
+                <div class="content-card-topline">
+                    <span>@icerik.ReleaseYear</span>
+                    <span>@(icerik.DurationMinutes.HasValue ? $"{icerik.DurationMinutes} dk" : "Süre yok")</span>
+                </div>
+                <h2>@icerik.Title</h2>
+                <p>@icerik.Description</p>
+                <div class="meta-row">
+                    <span>@(icerik.AgeLimit.HasValue ? $"{icerik.AgeLimit}+ yaş" : "Yaş sınırı yok")</span>
+                    <span class="rating-pill">@icerik.AverageRating.ToString("0.0") / 10</span>
+                </div>
+            </div>
+        </article>
+    }
+</section>
+
+<section id="icerik-yonetimi" class="admin-panel">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Yönetim Paneli</span>
+            <h2>İçerik Yönetimi</h2>
+        </div>
+        <span class="soft-badge">@Model.Icerikler.Count kayıt</span>
+    </div>
+
+    <form method="post" asp-page-handler="Ekle" class="form-panel">
+        <h3>Yeni İçerik Ekle</h3>
+        <div class="form-grid">
+            <label>
+                İçerik Adı
+                <input asp-for="YeniIcerik.Title" required />
+            </label>
+            <label>
+                İçerik Türü
+                <select asp-for="YeniIcerik.ContentType" required>
+                    <option value="Film">Film</option>
+                    <option value="Dizi">Dizi</option>
+                </select>
+            </label>
+            <label class="span-2">
+                Açıklama
+                <textarea asp-for="YeniIcerik.Description" rows="3"></textarea>
+            </label>
+            <label>
+                Yayın Yılı
+                <input asp-for="YeniIcerik.ReleaseYear" type="number" min="1900" max="2100" />
+            </label>
+            <label>
+                Süre
+                <input asp-for="YeniIcerik.DurationMinutes" type="number" min="1" />
+            </label>
+            <label>
+                Yaş Sınırı
+                <input asp-for="YeniIcerik.AgeLimit" type="number" min="0" max="21" />
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary-action">Ekle</button>
+    </form>
+
+    <div class="admin-list">
+        @foreach (var icerik in Model.Icerikler)
+        {
+            <div class="admin-row">
+                <form method="post" asp-page-handler="Guncelle" class="admin-row-form">
+                    <input type="hidden" name="GuncellenecekIcerik.ContentId" value="@icerik.ContentId" />
+
+                    <label>
+                        Ad
+                        <input name="GuncellenecekIcerik.Title" value="@icerik.Title" required />
+                    </label>
+                    <label>
+                        Tür
+                        <select name="GuncellenecekIcerik.ContentType" required>
+                            <option value="Film" selected="@(icerik.ContentType == "Film")">Film</option>
+                            <option value="Dizi" selected="@(icerik.ContentType == "Dizi")">Dizi</option>
+                        </select>
+                    </label>
+                    <label class="span-2">
+                        Açıklama
+                        <textarea name="GuncellenecekIcerik.Description" rows="2">@icerik.Description</textarea>
+                    </label>
+                    <label>
+                        Yıl
+                        <input name="GuncellenecekIcerik.ReleaseYear" value="@icerik.ReleaseYear" type="number" min="1900" max="2100" />
+                    </label>
+                    <label>
+                        Süre
+                        <input name="GuncellenecekIcerik.DurationMinutes" value="@icerik.DurationMinutes" type="number" min="1" />
+                    </label>
+                    <label>
+                        Yaş
+                        <input name="GuncellenecekIcerik.AgeLimit" value="@icerik.AgeLimit" type="number" min="0" max="21" />
+                    </label>
+                    <button type="submit" class="btn btn-secondary-action">Güncelle</button>
+                </form>
+
+                <form method="post" asp-page-handler="Sil" class="delete-form">
+                    <input type="hidden" name="SilinecekIcerikId" value="@icerik.ContentId" />
+                    <button type="submit" class="btn btn-danger-action">Sil</button>
+                </form>
+            </div>
+        }
+    </div>
+</section>

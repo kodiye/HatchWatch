@@ -1,0 +1,55 @@
+@page
+@model IstatistiklerModel
+
+<h1>İstatistikler</h1>
+
+<p>
+    Bu sayfada veritabanında oluşturulan kullanıcı tanımlı fonksiyonlar uygulama üzerinden çalıştırılmaktadır.
+</p>
+
+<form method="post">
+    <div>
+        <label>Kullanıcı Seç</label><br />
+        <select asp-for="SecilenKullaniciId">
+            <option value="0">Kullanıcı seçiniz</option>
+            @foreach (var kullanici in Model.Kullanicilar)
+            {
+                <option value="@kullanici.UserId">@kullanici.Username</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>İçerik Seç</label><br />
+        <select asp-for="SecilenIcerikId">
+            <option value="0">İçerik seçiniz</option>
+            @foreach (var icerik in Model.Icerikler)
+            {
+                <option value="@icerik.ContentId">@icerik.Title</option>
+            }
+        </select>
+    </div>
+
+    <br />
+    <button type="submit">İstatistikleri Göster</button>
+</form>
+
+<hr />
+
+<h3>Sonuçlar</h3>
+
+@if (Model.IzlenenIcerikSayisi != null)
+{
+    <p>
+        Seçilen kullanıcının izlediği içerik sayısı:
+        <strong>@Model.IzlenenIcerikSayisi</strong>
+    </p>
+}
+
+@if (Model.OrtalamaPuan != null)
+{
+    <p>
+        Seçilen içeriğin ortalama puanı:
+        <strong>@Model.OrtalamaPuan</strong>
+    </p>
+}

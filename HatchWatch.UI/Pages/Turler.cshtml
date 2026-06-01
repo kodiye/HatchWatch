@@ -1,0 +1,67 @@
+@page
+@model TurlerModel
+
+@{
+    ViewData["Title"] = "Tür Yönetimi";
+}
+
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Yönetim Paneli</span>
+        <h1>Tür Yönetimi</h1>
+        <p>Film ve dizileri raporda daha okunabilir göstermek için tür kayıtlarını yönetin.</p>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.BasariliMesaj))
+{
+    <div class="app-alert app-alert-success">@Model.BasariliMesaj</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.HataMesaji))
+{
+    <div class="app-alert app-alert-danger">@Model.HataMesaji</div>
+}
+
+<section class="admin-panel">
+    <form method="post" asp-page-handler="Ekle" class="form-panel compact-form">
+        <h2>Yeni Tür Ekle</h2>
+        <label>
+            Tür Adı
+            <input asp-for="YeniTur.GenreName" required />
+        </label>
+        <button type="submit" class="btn btn-primary-action">Ekle</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Kayıtlar</span>
+            <h2>Tür Listesi</h2>
+        </div>
+        <span class="soft-badge">@Model.Turler.Count kayıt</span>
+    </div>
+
+    <div class="simple-list">
+        @foreach (var tur in Model.Turler)
+        {
+            <div class="simple-row">
+                <form method="post" asp-page-handler="Guncelle" class="inline-edit-form">
+                    <input type="hidden" name="GuncellenecekTur.GenreId" value="@tur.GenreId" />
+                    <span class="row-id">#@tur.GenreId</span>
+                    <label>
+                        Tür Adı
+                        <input name="GuncellenecekTur.GenreName" value="@tur.GenreName" required />
+                    </label>
+                    <button type="submit" class="btn btn-secondary-action">Güncelle</button>
+                </form>
+
+                <form method="post" asp-page-handler="Sil" class="delete-form">
+                    <input type="hidden" name="SilinecekTurId" value="@tur.GenreId" />
+                    <button type="submit" class="btn btn-danger-action">Sil</button>
+                </form>
+            </div>
+        }
+    </div>
+</section>

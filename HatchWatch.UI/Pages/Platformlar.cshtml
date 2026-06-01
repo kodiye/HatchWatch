@@ -1,0 +1,67 @@
+@page
+@model PlatformlarModel
+
+@{
+    ViewData["Title"] = "Platform Yönetimi";
+}
+
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Yönetim Paneli</span>
+        <h1>Platform Yönetimi</h1>
+        <p>İçeriklerin hangi yayın platformlarında yer aldığını demo veri setinde düzenleyin.</p>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.BasariliMesaj))
+{
+    <div class="app-alert app-alert-success">@Model.BasariliMesaj</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.HataMesaji))
+{
+    <div class="app-alert app-alert-danger">@Model.HataMesaji</div>
+}
+
+<section class="admin-panel">
+    <form method="post" asp-page-handler="Ekle" class="form-panel compact-form">
+        <h2>Yeni Platform Ekle</h2>
+        <label>
+            Platform Adı
+            <input asp-for="YeniPlatform.PlatformName" required />
+        </label>
+        <button type="submit" class="btn btn-primary-action">Ekle</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Kayıtlar</span>
+            <h2>Platform Listesi</h2>
+        </div>
+        <span class="soft-badge">@Model.Platformlar.Count kayıt</span>
+    </div>
+
+    <div class="simple-list">
+        @foreach (var platform in Model.Platformlar)
+        {
+            <div class="simple-row">
+                <form method="post" asp-page-handler="Guncelle" class="inline-edit-form">
+                    <input type="hidden" name="GuncellenecekPlatform.PlatformId" value="@platform.PlatformId" />
+                    <span class="row-id">#@platform.PlatformId</span>
+                    <label>
+                        Platform Adı
+                        <input name="GuncellenecekPlatform.PlatformName" value="@platform.PlatformName" required />
+                    </label>
+                    <button type="submit" class="btn btn-secondary-action">Güncelle</button>
+                </form>
+
+                <form method="post" asp-page-handler="Sil" class="delete-form">
+                    <input type="hidden" name="SilinecekPlatformId" value="@platform.PlatformId" />
+                    <button type="submit" class="btn btn-danger-action">Sil</button>
+                </form>
+            </div>
+        }
+    </div>
+</section>
