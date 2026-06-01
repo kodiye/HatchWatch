@@ -118,10 +118,10 @@ Bu dosya `hatchwatch_db` veritabanını ve gerekli tabloları, stored procedure'
 Bağlantı bilgisi `HatchWatch.DAL/VeritabaniBaglanti.cs` dosyasındadır:
 
 ```csharp
-Server=localhost;Port=3306;Database=hatchwatch_db;Uid=root;Pwd=root;
+Server=localhost;Port=3306;Database=hatchwatch_db;Uid=root;Pwd=MYSQL_SIFRESI;
 ```
 
-Kendi MySQL şifrenize göre `Pwd` değerini değiştirmeniz gerekebilir.
+`MYSQL_SIFRESI` bölümünü kendi yerel MySQL şifrenizle değiştirmeniz gerekir.
 
 ### 4. Projeyi Derleyin
 
